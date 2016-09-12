@@ -1,0 +1,8 @@
+de\chaos_butterfly\sm_combat\model\modifiers\ModifieableSM.class
+de\chaos_butterfly\sm_combat\model\character\AttributeSM.class
+de\chaos_butterfly\sm_combat\model\character\CharacterSM.class
+de\chaos_butterfly\sm_combat\model\modifiers\IModifieable.class
+de\chaos_butterfly\sm_combat\model\character\AttributeSpendableSM.class
+de\chaos_butterfly\sm_combat\model\character\SpendableLevelDescriptor.class
+de\chaos_butterfly\sm_combat\model\character\CharacterSMConstants.class
+de\chaos_butterfly\sm_combat\model\modifiers\ModifierSM.class
