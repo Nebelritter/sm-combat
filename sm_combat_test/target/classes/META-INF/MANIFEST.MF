@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Built-By: Stefan Alter
-Build-Jdk: 1.7.0_60-ea
+Built-By: Alti
+Build-Jdk: 1.8.0_101
 Created-By: Maven Integration for Eclipse
 
