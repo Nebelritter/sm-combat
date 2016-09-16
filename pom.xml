@@ -2,8 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.cbf.splittermond</groupId>
-	<artifactId>sm_combat</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>sm-combat</artifactId>
+	<version>0.0.1-SNAPSHOT</version>	
 	<name>Splittermond combat</name>
 	<packaging>pom</packaging>
 
@@ -12,49 +12,91 @@
 		<module>sm_combat_core</module>
 		<module>sm_combat_model</module>
 		<module>sm_combat_test</module>
+		<module>sm-combat-ear</module>
 	</modules>
 
-	<build>		
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.6</version>
-					<configuration>
-						<encoding>UTF-8</encoding>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.5.1</version>
-					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
-						<encoding>UTF-8</encoding>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+ <properties>
+        <!-- Explicitly declaring the source encoding eliminates the following 
+            message: -->
+        <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered 
+            resources, i.e. build is platform dependent! -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <!-- JBoss dependency versions -->
+        
+        <version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
+
+        <!-- Define the version of the JBoss BOMs we want to import to specify tested stacks. -->
+        <version.jboss.bom>8.2.1.Final</version.jboss.bom>
+        <version.wildfly>10.0.0.Final</version.wildfly>
+
+
+        <!-- other plugin versions -->
+        <version.compiler.plugin>3.1</version.compiler.plugin>
+        <version.ear.plugin>2.10</version.ear.plugin>
+        <version.ejb.plugin>2.3</version.ejb.plugin>
+        <version.surefire.plugin>2.16</version.surefire.plugin>
+        <version.war.plugin>2.5</version.war.plugin>
+        
+        <version.ressources.plugin>2.6</version.ressources.plugin>
+        
+
+        <!-- maven-compiler-plugin -->
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+    </properties>
+	
 	<dependencyManagement>
 		<dependencies>
+			<!--  project dependencies -->
 			<dependency>
 				<groupId>de.cbf.splittermond</groupId>
-				<artifactId>sm_combat_model</artifactId>
+				<artifactId>sm-combat-ear</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>de.cbf.splittermond</groupId>
-				<artifactId>sm_combat_core</artifactId>
+				<artifactId>sm-combat-model</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>de.cbf.splittermond</groupId>
-				<artifactId>sm_combat_test</artifactId>
+				<artifactId>sm-combat-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>de.cbf.splittermond</groupId>
+				<artifactId>sm-combat-test</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		
+		 	<!-- JBOSS Dependencies
+		 	
+		 	 JBoss distributes a complete set of Java EE 7 APIs including
+                a Bill of Materials (BOM). A BOM specifies the versions of a "stack" (or 
+                a collection) of artifacts. We use this here so that we always get the correct 
+                versions of artifacts. Here we use the jboss-javaee-7.0-with-tools stack
+                (you can read this as the JBoss stack of the Java EE 7 APIs, with some extras
+                tools for your project, such as Arquillian for testing) and the jboss-javaee-7.0-with-hibernate
+                stack you can read this as the JBoss stack of the Java EE 7 APIs, with extras
+                from the Hibernate family of projects) -->
+			<dependency>
+                <groupId>org.wildfly.bom</groupId>
+                <artifactId>jboss-javaee-7.0-with-tools</artifactId>
+                <version>${version.jboss.bom}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wildfly.bom</groupId>
+                <artifactId>jboss-javaee-7.0-with-hibernate</artifactId>
+                <version>${version.jboss.bom}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+		
+			
 		</dependencies>
 	</dependencyManagement>
 </project>
