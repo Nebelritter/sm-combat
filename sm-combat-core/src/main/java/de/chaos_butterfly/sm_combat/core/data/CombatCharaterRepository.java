@@ -13,7 +13,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import de.chaos_butterfly.sm_combat.model.character.CombatCharacterSM;
+import de.chaos_butterfly.sm_combat.model.combat.CombatCharacterSM;
 
 /**
  * @author Alti
