@@ -16,4 +16,5 @@
   		<artifactId>sm-combat-model</artifactId>
   	</dependency>
   </dependencies>
+  <packaging>ejb</packaging>
 </project>

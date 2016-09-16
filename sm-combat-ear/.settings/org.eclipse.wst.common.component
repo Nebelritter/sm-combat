@@ -2,10 +2,10 @@
     <wb-module deploy-name="sm-combat-ear">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/ear-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/application" tag="defaultRootSource"/>
-        <dependent-module archiveName="sm-combat-model.jar" deploy-path="/lib" handle="module:/resource/sm_combat_model/sm_combat_model">
+        <dependent-module archiveName="sm-combat-model.jar" deploy-path="/lib" handle="module:/resource/sm-combat-model/sm-combat-model">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="sm-combat-core.jar" deploy-path="/lib" handle="module:/resource/sm_combat_core/sm_combat_core">
+        <dependent-module archiveName="sm-combat-core.jar" deploy-path="/lib" handle="module:/resource/sm-combat-core/sm-combat-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
     </wb-module>

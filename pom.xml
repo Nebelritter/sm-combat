@@ -9,9 +9,9 @@
 
 
 	<modules>
-		<module>sm_combat_core</module>
-		<module>sm_combat_model</module>
-		<module>sm_combat_test</module>
+		<module>sm-combat-core</module>
+		<module>sm-combat-model</module>
+		<module>sm-combat-test</module>
 		<module>sm-combat-ear</module>
 	</modules>
 
