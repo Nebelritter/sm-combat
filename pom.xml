@@ -10,9 +10,13 @@
 
 	<modules>
 		<module>sm-combat-core</module>
-		<module>sm-combat-model</module>
-		<module>sm-combat-test</module>
+		<module>sm-combat-client</module>
+		<module>sm-combat-model</module>		
 		<module>sm-combat-ear</module>
+		
+		<!--
+		<module>sm-combat-test</module>
+		 -->
 	</modules>
 
  <properties>
@@ -63,6 +67,13 @@
 				<groupId>de.cbf.splittermond</groupId>
 				<artifactId>sm-combat-core</artifactId>
 				<version>${project.version}</version>
+				<type>ejb</type>
+			</dependency>
+			<dependency>
+				<groupId>de.cbf.splittermond</groupId>
+				<artifactId>sm-combat-client</artifactId>
+				<version>${project.version}</version>
+				<type>war</type>
 			</dependency>
 			<dependency>
 				<groupId>de.cbf.splittermond</groupId>
@@ -95,7 +106,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-		
+			<dependency>
+				<groupId>org.wildfly.bom</groupId>
+				<artifactId>jboss-javaee-7.0-with-resteasy</artifactId>
+				<version>${version.jboss.bom}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			
 		</dependencies>
 	</dependencyManagement>

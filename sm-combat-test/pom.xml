@@ -16,6 +16,30 @@
   	<dependency>
   		<groupId>de.cbf.splittermond</groupId>
   		<artifactId>sm-combat-core</artifactId>
+  		<type>ejb</type>  		
   	</dependency>
+  	
+  	
+  	 <!-- Test scope dependencies -->
+     <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
+     </dependency>
+     
+     <!-- Arquillian allows you to test enterprise code such as EJBs and 
+         Transactional(JTA) JPA from JUnit/TestNG -->
+     <dependency>
+         <groupId>org.jboss.arquillian.junit</groupId>
+         <artifactId>arquillian-junit-container</artifactId>
+         <scope>test</scope>
+     </dependency>
+   
+     <dependency>
+         <groupId>org.jboss.arquillian.protocol</groupId>
+         <artifactId>arquillian-protocol-servlet</artifactId>
+         <scope>test</scope>               
+     </dependency>
+  	
   </dependencies>
 </project>

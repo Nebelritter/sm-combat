@@ -11,6 +11,7 @@ import de.chaos_butterfly.sm_combat.model.modifiers.ModifieableSM;
  */
 public class CharacterSM extends ModifieableSM {
 
+	private String name;
 
 	private AttributeSM charisma;
 	private AttributeSM agility;
@@ -34,5 +35,11 @@ public class CharacterSM extends ModifieableSM {
 	private AttributeSpendableSM lifeValue;
 	private AttributeSpendableSM focusValue;
 
+	public String getName() {
+		return name;
+	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
 }

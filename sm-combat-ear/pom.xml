@@ -20,12 +20,18 @@
 		</dependency>
 		<dependency>
 			<groupId>de.cbf.splittermond</groupId>
-			<artifactId>sm-combat-core</artifactId>			
+			<artifactId>sm-combat-core</artifactId>	
+			<type>ejb</type>		
+		</dependency>
+		<dependency>
+			<groupId>de.cbf.splittermond</groupId>
+			<artifactId>sm-combat-client</artifactId>
+			<type>war</type>
 		</dependency>
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
+       <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
