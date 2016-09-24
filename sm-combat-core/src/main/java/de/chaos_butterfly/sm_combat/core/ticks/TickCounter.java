@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.chaos_butterfly.sm_combat.model.combat.ticks;
+package de.chaos_butterfly.sm_combat.core.ticks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +12,7 @@ import java.util.Map;
  * @author Alti
  *
  */
+
 public class TickCounter {
 
 	private Map<Integer, List<TickEffect>> tickPositions;

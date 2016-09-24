@@ -32,6 +32,10 @@ public class CombatCharacterSM {
 
 	private int tick;
 
+	protected CombatCharacterSM() {
+		super();
+	}
+
 	public CombatCharacterSM(CharacterSM character) {
 		super();
 		this.character = character;
@@ -68,6 +72,14 @@ public class CombatCharacterSM {
 	 */
 	public void setTick(int tick) {
 		this.tick = tick;
+	}
+
+	public CharacterSM getCharacter() {
+		return character;
+	}
+
+	public void setCharacter(CharacterSM character) {
+		this.character = character;
 	}
 
 }
