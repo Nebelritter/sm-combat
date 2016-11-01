@@ -11,6 +11,7 @@
 	<modules>
 		<module>sm-combat-core</module>
 		<module>sm-combat-client</module>
+		<module>sm-combat-client-vaadin</module>
 		<module>sm-combat-model</module>		
 		<module>sm-combat-ear</module>
 		

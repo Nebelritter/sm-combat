@@ -1,3 +1,4 @@
 .project
 .settings
 .classpath
+/sm-combat-client-vaadin/target
