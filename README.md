@@ -1,2 +1,2 @@
 # sm-combat
-Splittermond combat tool
+SM combat tool

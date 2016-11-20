@@ -1,52 +1,58 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
-    <groupId>de.cbf.splittermond</groupId>
+    <groupId>de.cbf.sm</groupId>
     <artifactId>sm-combat</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  
+
   <artifactId>sm-combat-ear</artifactId>
   <packaging>ear</packaging>
-  <name>Splittermond combat ear</name>
-  <description>Splittermond combat ear</description>
-  
-  <dependencies>
-        <!-- Depend on the ejb module and war so that we can package them -->
-       <dependency>
-			<groupId>de.cbf.splittermond</groupId>
-			<artifactId>sm-combat-model</artifactId>			
-		</dependency>
-		<dependency>
-			<groupId>de.cbf.splittermond</groupId>
-			<artifactId>sm-combat-core</artifactId>	
-			<type>ejb</type>		
-		</dependency>
-		<dependency>
-			<groupId>de.cbf.splittermond</groupId>
-			<artifactId>sm-combat-client</artifactId>
-			<type>war</type>
-		</dependency>
-    </dependencies>
+  <name>SM combat ear</name>
+  <description>SM combat ear</description>
 
-    <build>
-       <finalName>${project.artifactId}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-ear-plugin</artifactId>
-                <version>${version.ear.plugin}</version>
-                <configuration>
-                    <!-- Tell Maven we are using Java EE 7 -->
-                    <version>7</version>
-                    <!-- Use Java EE ear libraries as needed. Java EE ear libraries 
-                        are in easy way to package any libraries needed in the ear, and automatically 
-                        have any modules (EJB-JARs and WARs) use them -->
-                    <defaultLibBundleDir>lib</defaultLibBundleDir>
-                    <fileNameMapping>no-version</fileNameMapping>
-                </configuration>
-            </plugin>           
-        </plugins>
-    </build>
+  <dependencies>
+    <!-- Depend on the ejb module and war so that we can package them -->
+    <dependency>
+      <groupId>de.cbf.sm</groupId>
+      <artifactId>sm-combat-model</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.cbf.sm</groupId>
+      <artifactId>sm-combat-core</artifactId>
+      <type>ejb</type>
+    </dependency>
+    <dependency>
+      <groupId>de.cbf.sm</groupId>
+      <artifactId>sm-combat-client</artifactId>
+      <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>de.cbf.sm</groupId>
+      <artifactId>sm-combat-client-vaadin</artifactId>
+      <type>war</type>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-ear-plugin</artifactId>
+        <version>${version.ear.plugin}</version>
+        <configuration>
+          <!-- Tell Maven we are using Java EE 7 -->
+          <version>7</version>
+          <!-- Use Java EE ear libraries as needed. Java EE ear libraries 
+            are in easy way to package any libraries needed in the ear, and automatically 
+            have any modules (EJB-JARs and WARs) use them -->
+          <defaultLibBundleDir>lib</defaultLibBundleDir>
+          <fileNameMapping>no-version</fileNameMapping>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
