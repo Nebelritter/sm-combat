@@ -15,48 +15,50 @@ import de.chaosbutterfly.smcombat.model.combat.CombatCharacterSM;
 
 public class TickEffectCharacterActs implements TickEffect {
 
-	private int tick;
+    private int tick;
 
-	private CombatCharacterSM character;
+    private CombatCharacterSM character;
 
-	private CombatLogicController combatLogicController;
+    private CombatLogicController combatLogicController;
 
-	@Inject
+    @Inject
     public TickEffectCharacterActs(CombatLogicController combatLogicController) {
         super();
-		this.combatLogicController = combatLogicController;
-	}
+        this.combatLogicController = combatLogicController;
+    }
 
-	@Override
-	public Object execute() {
-		return combatLogicController.execute(this);
-	}
+    @Override
+    public Object execute() {
+        return combatLogicController.execute(this);
+    }
 
-	public String getName() {
-		return character.getCharacter().getName() + " acts at " + tick;
-	}
+    @Override
+    public String getName() {
+        return character.getCharacter().getName() + " acts at " + tick;
+    }
 
-	public int getTick() {
-		return tick;
-	}
+    @Override
+    public int getTick() {
+        return tick;
+    }
 
-	public void setTick(int tick) {
-		this.tick = tick;
-	}
+    public void setTick(int tick) {
+        this.tick = tick;
+    }
 
-	/**
-	 * @return the character
-	 */
-	public CombatCharacterSM getCharacter() {
-		return character;
-	}
+    /**
+     * @return the character
+     */
+    public CombatCharacterSM getCharacter() {
+        return character;
+    }
 
-	/**
-	 * @param character
-	 *            the character to set
-	 */
-	public void setCharacter(CombatCharacterSM character) {
-		this.character = character;
-	}
+    /**
+     * @param character
+     *            the character to set
+     */
+    public void setCharacter(CombatCharacterSM character) {
+        this.character = character;
+    }
 
 }
