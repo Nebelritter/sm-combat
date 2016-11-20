@@ -5,6 +5,12 @@ package de.chaosbutterfly.smcombat.model.character;
  *
  */
 public final class CharacterSMConstants {
+
+    private CharacterSMConstants() {
+        super();
+        //no object necessary
+    }
+
     public static final String ATTRIBUTE_CHARISMA_NAME = "Ausstrahlung";
     public static final String ATTRIBUTE_AGILITY_NAME = "Beweglichkeit";
     public static final String ATTRIBUTE_INTUITION_NAME = "Intuition";
