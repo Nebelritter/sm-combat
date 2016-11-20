@@ -1,18 +1,19 @@
 /**
  * 
  */
-package de.chaosbutterfly.smcombat.core.ticks;
+package de.chaosbutterfly.smcombat.core.combat.ticks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.chaosbutterfly.smcombat.core.combat.ticks.effects.TickEffect;
+
 /**
  * @author Alti
  *
  */
-
 public class TickCounter {
 
     private Map<Integer, List<TickEffect>> tickPositions;
@@ -33,7 +34,7 @@ public class TickCounter {
      */
     public List<TickEffect> advanceTickByOne() {
         // tidy up last tick
-        // remove tick and list from map to free some mem
+        // remove tick and list from map to free some memory
         tickPositions.remove(currentTick);
         // increase current tick
         currentTick++;
@@ -41,21 +42,21 @@ public class TickCounter {
         return tickPositions.get(currentTick);
     }
 
-    public boolean addCharacterAtTick(TickEffect character, int tick) {
+    public boolean addTickEffectAtTick(TickEffect effect, int tick) {
         List<TickEffect> list = tickPositions.get(tick);
         if (list == null) {
             list = new ArrayList<>();
             tickPositions.put(tick, list);
         }
-        return list.add(character);
+        return list.add(effect);
     }
 
-    public boolean removeCharacterAtTick(TickEffect character, int tick) {
+    public boolean removeTickEffectAtTick(TickEffect effect, int tick) {
         List<TickEffect> list = tickPositions.get(tick);
         if (list == null) {
             return false; // no list means character is not contained, so not
                           // found at this position
         }
-        return list.remove(character);
+        return list.remove(effect);
     }
 }

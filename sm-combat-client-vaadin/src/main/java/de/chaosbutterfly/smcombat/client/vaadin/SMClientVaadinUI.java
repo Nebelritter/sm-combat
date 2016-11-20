@@ -1,9 +1,12 @@
 package de.chaosbutterfly.smcombat.client.vaadin;
 
+import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.cdi.CDIUI;
+import com.vaadin.cdi.internal.VaadinCDIServlet;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button;
@@ -11,6 +14,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+
+import de.chaosbutterfly.smcombat.client.vaadin.session.VaadinSessionManager;
+import de.chaosbutterfly.smcombat.core.session.UserLogInData;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser
@@ -22,10 +28,14 @@ import com.vaadin.ui.VerticalLayout;
  * initialize non-component functionality.
  */
 @Theme("mytheme")
+@CDIUI("")
 public class SMClientVaadinUI extends UI {
 
     /**  */
-    private static final long serialVersionUID = 1691916423832680720L;
+    private static final long serialVersionUID = 1L;
+
+    @Inject
+    private VaadinSessionManager sessionManager;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -35,7 +45,12 @@ public class SMClientVaadinUI extends UI {
         name.setCaption("Type your name here:");
 
         Button button = new Button("Click Me");
-        button.addClickListener(e -> layout.addComponent(new Label("Thanks " + name.getValue() + ", it works!")));
+        button.addClickListener(e -> {
+            layout.addComponent(new Label("Thanks " + name.getValue() + ", it works!"));
+            UserLogInData logInData = new UserLogInData();
+            logInData.setUserName(name.getValue());
+            sessionManager.logIn(logInData);
+        });
 
         layout.addComponents(name, button);
         layout.setMargin(true);
@@ -44,8 +59,10 @@ public class SMClientVaadinUI extends UI {
         setContent(layout);
     }
 
-    @WebServlet(urlPatterns = "/*", name = "SMClientVaadinUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = SMClientVaadinUI.class, productionMode = false)
-    public static class SMClientVaadinUIServlet extends VaadinServlet {
+//    @WebServlet(urlPatterns = "/*", name = "SMClientVaadinUIServlet", asyncSupported = true)
+//    @VaadinServletConfiguration(ui = SMClientVaadinUI.class, productionMode = false)
+    public static class SMClientVaadinUIServlet extends VaadinCDIServlet {
+        private static final long serialVersionUID = 1L;
     }
+
 }

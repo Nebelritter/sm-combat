@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.chaosbutterfly.smcombat.core.commands;
+package de.chaosbutterfly.smcombat.core.combat.commands;
 
 /**
  * @author Alti

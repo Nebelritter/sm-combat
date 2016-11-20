@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.chaosbutterfly.smcombat.core.ticks;
+package de.chaosbutterfly.smcombat.core.combat.ticks.effects;
 
 /**
  * @author Alti

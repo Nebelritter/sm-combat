@@ -1,11 +1,9 @@
 /**
  * 
  */
-package de.chaosbutterfly.smcombat.core.ticks;
+package de.chaosbutterfly.smcombat.core.combat.ticks.effects;
 
-import javax.inject.Inject;
-
-import de.chaosbutterfly.smcombat.core.controller.CombatLogicController;
+import de.chaosbutterfly.smcombat.core.combat.controller.CombatLogicController;
 import de.chaosbutterfly.smcombat.model.combat.CombatCharacterSM;
 
 /**
@@ -21,7 +19,6 @@ public class TickEffectCharacterActs implements TickEffect {
 
     private CombatLogicController combatLogicController;
 
-    @Inject
     public TickEffectCharacterActs(CombatLogicController combatLogicController) {
         super();
         this.combatLogicController = combatLogicController;

@@ -24,11 +24,13 @@
       <artifactId>sm-combat-core</artifactId>
       <type>ejb</type>
     </dependency>
+    <!-- 
     <dependency>
       <groupId>de.cbf.sm</groupId>
       <artifactId>sm-combat-client</artifactId>
       <type>war</type>
     </dependency>
+     -->
     <dependency>
       <groupId>de.cbf.sm</groupId>
       <artifactId>sm-combat-client-vaadin</artifactId>
