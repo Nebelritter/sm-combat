@@ -3,16 +3,17 @@
  */
 package de.chaosbutterfly.smcombat.client.vaadin.session;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
+
+import com.vaadin.cdi.UIScoped;
 
 import de.chaosbutterfly.smcombat.core.combat.commands.CharacterActsCommand;
 import de.chaosbutterfly.smcombat.core.combat.ui.UIClientImplementation;
-import de.chaosbutterfly.smcombat.core.session.PlaySessionManagement;
-import de.chaosbutterfly.smcombat.core.session.SMCombatSession;
-import de.chaosbutterfly.smcombat.core.session.UserLogInData;
-import de.chaosbutterfly.smcombat.core.session.UserSession;
+import de.chaosbutterfly.smcombat.core.session.GameSessionManagement;
 import de.chaosbutterfly.smcombat.core.session.UserSessionManagement;
+import de.chaosbutterfly.smcombat.core.session.data.SMCombatSession;
+import de.chaosbutterfly.smcombat.core.session.data.UserLogInData;
+import de.chaosbutterfly.smcombat.core.session.data.UserSession;
 import de.chaosbutterfly.smcombat.model.character.CharacterSM;
 import de.chaosbutterfly.smcombat.model.combat.CombatCharacterSM;
 
@@ -22,45 +23,56 @@ import de.chaosbutterfly.smcombat.model.combat.CombatCharacterSM;
  *         manages the sessions from the clients, is a server component, maybe
  *         once in own module 'vaadin-connector'
  */
-@Stateless
+@UIScoped
 public class VaadinSessionManager implements UIClientImplementation {
 
     private UserSessionManagement usermanagement;
-    private PlaySessionManagement playSessionManagement;
+    private GameSessionManagement gameSessionManagement;
+
+    public VaadinSessionManager() {
+    }
 
     @Inject
-    public VaadinSessionManager(UserSessionManagement usermanagement, PlaySessionManagement playSessionManagement) {
+    public VaadinSessionManager(UserSessionManagement usermanagement, GameSessionManagement gameSessionManagement) {
         super();
         this.usermanagement = usermanagement;
-        this.playSessionManagement = playSessionManagement;
+        this.gameSessionManagement = gameSessionManagement;
     }
 
-    public VaadinSession logIn(UserLogInData logInData) {
+    public SMVaadinSession logIn(UserLogInData logInData) {
         UserSession userSession = usermanagement.logInUser(logInData);
-        VaadinSession vaadinSession = new VaadinSession(userSession);
-        //add vaadin data
-        return vaadinSession;
+        SMVaadinSession result = null;
+        if (userSession != null) {
+            result = new SMVaadinSession(userSession);
+        }
+        return result;
     }
 
-    public VaadinSession logInToPlaySession(VaadinSession vaadinSession, CharacterSM character,
-            SMCombatSession playSession) {
-        boolean success = playSessionManagement.addCharacterToPlaySession(playSession, vaadinSession.getUserSession(),
+    public boolean logOut(SMVaadinSession sessionToEnd) {
+        return usermanagement.logOut(sessionToEnd.getUserSession());
+    }
+
+    public SMVaadinSession logInToGameSession(SMVaadinSession vaadinSession, CharacterSM character,
+            SMCombatSession gameSession) {
+        boolean success = gameSessionManagement.addCharacterToGameSession(gameSession, vaadinSession.getUserSession(),
                 character);
         if (success) {
-            vaadinSession.setPlaySession(playSession);
+            vaadinSession.setGameSession(gameSession);
         }
         return vaadinSession;
     }
 
-    public boolean logOut(VaadinSession sessionToEnd) {
-        usermanagement.logOut(sessionToEnd.getUserSession());
-
+    public boolean logOutOfgameSession(SMVaadinSession sessionToEnd) {
+        gameSessionManagement.removeCharacterFromGameSession(sessionToEnd.getGameSession());
         return true; //if session is closed successfully
     }
 
+
+
     @Override
     public CharacterActsCommand pullCharacterActCommand(CombatCharacterSM character) {
-        //broadcast to all playsessions
+        //get gamesession via character
+        //message session to use dialog
 
         return null;
     }

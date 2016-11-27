@@ -1,11 +1,6 @@
 package de.chaosbutterfly.smcombat.core.combat.ui;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 
 import de.chaosbutterfly.smcombat.core.combat.commands.CharacterActsCommand;
 import de.chaosbutterfly.smcombat.core.combat.controller.CombatLogicController;
