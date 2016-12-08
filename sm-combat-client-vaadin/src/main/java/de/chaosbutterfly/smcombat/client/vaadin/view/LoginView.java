@@ -38,7 +38,6 @@ public class LoginView extends CustomComponent implements View {
 
     private VaadinSessionManager sessionManager;
 
-
     //UI components
     private TextField user;
     private PasswordField password;
@@ -125,6 +124,11 @@ public class LoginView extends CustomComponent implements View {
                 LoginView.this.password.focus();
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 
 }

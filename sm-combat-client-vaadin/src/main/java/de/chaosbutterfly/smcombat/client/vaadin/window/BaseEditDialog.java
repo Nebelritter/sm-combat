@@ -44,29 +44,7 @@ public abstract class BaseEditDialog extends Window {
         buttonsHLO.setMargin(true);
 
         cancelButton = new Button("Cancel");
-        cancelButton.addClickListener(new ClickListener() {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (isDirty()) {
-                    // quick confirmation saying unsaved will be lost
-                    ConfirmDialog.show(UI.getCurrent(), "Are you sure?", new ConfirmDialog.Listener() {
-                        private static final long serialVersionUID = 1L;
-
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                // Confirmed loss of unchanged changes
-                                result = RESULT_CANCEL;
-                                close();
-                            } else {
-                                // User did not confirm loss of unsaved changes                                                            
-                            }
-                        }
-                    });
-                }
-            }
-        });
+        cancelButton.addClickListener(new CancelButtonClicklistener());
         saveButton = new Button("Save");
         saveButton.addClickListener(new ClickListener() {
             private static final long serialVersionUID = 1L;
@@ -102,21 +80,15 @@ public abstract class BaseEditDialog extends Window {
     protected boolean stringDirty(String original, String changed) {
         if (original != null && changed != null) {
             return original.equals(changed);
-        } else if (original == null && changed == null) {
-            return false;
-        } else {
-            return true;
-        }
+        } else
+            return !(original == null && changed == null);
     }
 
     protected boolean booleanDirty(Boolean original, Boolean changed) {
         if (original != null && changed != null) {
             return original.equals(changed);
-        } else if (original == null && changed == null) {
-            return false;
-        } else {
-            return true;
-        }
+        } else
+            return !(original == null && changed == null);
     }
 
     /**
@@ -133,4 +105,36 @@ public abstract class BaseEditDialog extends Window {
     public void setResult(int result) {
         this.result = result;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    private class CancelButtonClicklistener implements ClickListener {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public void buttonClick(ClickEvent event) {
+            if (isDirty()) {
+                // quick confirmation saying unsaved will be lost
+                ConfirmDialog.show(UI.getCurrent(), "Are you sure?", new ConfirmDialog.Listener() {
+                    private static final long serialVersionUID = 1L;
+
+                    @Override
+                    public void onClose(ConfirmDialog dialog) {
+                        if (dialog.isConfirmed()) {
+                            // Confirmed loss of unchanged changes
+                            result = RESULT_CANCEL;
+                            close();
+                        } else {
+                            // User did not confirm loss of unsaved changes                                                            
+                        }
+                    }
+                });
+            }
+        }
+    }
+
 }

@@ -54,8 +54,6 @@ public class MainView extends CustomComponent implements View {
     private static final String UI_TXT_MENU_USER_PROFILE = "Profile";
     private static final String UI_TXT_MENU_USER_LOGOUT = "Logout";
 
-
-
     private VaadinSessionManager sessionManager;
     private KnownUserAdminService userAdminService;
 
@@ -133,8 +131,6 @@ public class MainView extends CustomComponent implements View {
         return (SMVaadinSession) attribute;
     }
 
-
-
     private Command provideLogOutCommand() {
         Command logoutCommand = new Command() {
             /**       */
@@ -167,6 +163,7 @@ public class MainView extends CustomComponent implements View {
             private static final long serialVersionUID = 1L;
 
             IGetKnownUserProvider knownUserProvider = provider;
+
             @Override
             public void menuSelected(MenuItem selectedItem) {
                 KnownUser user = knownUserProvider.provideKnownUser();
@@ -177,6 +174,7 @@ public class MainView extends CustomComponent implements View {
                 //close listener
                 myUserEditWindow.addCloseListener(new CloseListener() {
                     private static final long serialVersionUID = 1L;
+
                     @Override
                     public void windowClose(CloseEvent e) {
                         UserEditDialog editWindow = (UserEditDialog) e.getWindow();
@@ -202,7 +200,6 @@ public class MainView extends CustomComponent implements View {
         };
         return editUserCommand;
     }
-
 
     private KnownUser cloneUser(KnownUser selectedUser) {
         // TODO Auto-generated method stub
@@ -232,7 +229,8 @@ public class MainView extends CustomComponent implements View {
                             //get new data and save 
                             KnownUser editedUser = editWindow.getKnownUserData();
                             LOGGER.finest("User added:" + editedUser);
-                            userAdminService.addUser(editedUser.getUserName(), editedUser.getPassword(),editedUser.getIsAdmin());
+                            userAdminService.addUser(editedUser.getUserName(), editedUser.getPassword(),
+                                    editedUser.getIsAdmin());
                             Notification.show("User added", Type.TRAY_NOTIFICATION);
                             break;
                         default:
@@ -265,11 +263,11 @@ public class MainView extends CustomComponent implements View {
         return editUsersCommand;
     }
 
-    private interface IGetKnownUserProvider {
+    private interface IGetKnownUserProvider extends Serializable {
         KnownUser provideKnownUser();
     }
 
-    private class SessionKnownUserProvider implements IGetKnownUserProvider, Serializable {
+    private class SessionKnownUserProvider implements IGetKnownUserProvider {
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -280,7 +278,7 @@ public class MainView extends CustomComponent implements View {
         }
     }
 
-    private class SelectedKnownUserProvider implements IGetKnownUserProvider, Serializable {
+    private class SelectedKnownUserProvider implements IGetKnownUserProvider {
         private static final long serialVersionUID = 1L;
 
         @Override

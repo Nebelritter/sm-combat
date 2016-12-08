@@ -29,8 +29,13 @@ public class SMClientVaadinUI extends UI {
     /**  */
     private static final long serialVersionUID = 1L;
 
-    @Inject
     private CDIViewProvider viewProvider;
+
+    @Inject
+    public SMClientVaadinUI(CDIViewProvider viewProvider) {
+        super();
+        this.viewProvider = viewProvider;
+    }
 
     @Override
     protected void init(VaadinRequest request) {
@@ -42,6 +47,11 @@ public class SMClientVaadinUI extends UI {
         // We use a view change handler to ensure the user is always redirected
         // to the login view if the user is not logged in.
         getNavigator().addViewChangeListener(new LogInViewChangeListener());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 
     private class LogInViewChangeListener implements ViewChangeListener {

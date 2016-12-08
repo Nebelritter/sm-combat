@@ -36,22 +36,34 @@ public class KnownUsersDAOImpl implements KnownUserDAO {
     private void addTestUsers() {
         //gets called multiple time, only add if not present
         if (loadUser("Test") == null) {
-            String testUserName = "Test";
-            String password = "passw0rd";
+            String testUserName = getTestUserName();
+            String password = getEncTestPWD();
             KnownUser testUser = new KnownUser();
             testUser.setUserName(testUserName);
             testUser.setPassword(password);
             addUser(testUser);
         }
         if (loadUser("Admin") == null) {
-            String adminUserName = "Admin";
-            String adminPassword = "passw0rd";
+            String adminUserName = getAdminUserName();
+            String adminPassword = getEncTestPWD();
             KnownUser adminUser = new KnownUser();
             adminUser.setUserName(adminUserName);
             adminUser.setPassword(adminPassword);
             adminUser.setIsAdmin(true);
             addUser(adminUser);
         }
+    }
+
+    private String getEncTestPWD() {
+        return "passw0rd";
+    }
+
+    private String getAdminUserName() {
+        return "Admin";
+    }
+
+    private String getTestUserName() {
+        return "Test";
     }
 
     @Override

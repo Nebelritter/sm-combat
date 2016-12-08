@@ -51,7 +51,7 @@ public class SMCombatSession {
             return true;
         } else {
             for (CombatCharacterSM combatCharacterSM : characters) {
-                if (combatCharacter.equals(combatCharacterSM.getCharacter())) {
+                if (combatCharacter.equals(combatCharacterSM)) {
                     return false;
                 }
             }

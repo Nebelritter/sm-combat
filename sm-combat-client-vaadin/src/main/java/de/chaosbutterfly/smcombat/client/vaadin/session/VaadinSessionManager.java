@@ -3,6 +3,8 @@
  */
 package de.chaosbutterfly.smcombat.client.vaadin.session;
 
+import java.io.Serializable;
+
 import javax.inject.Inject;
 
 import com.vaadin.cdi.UIScoped;
@@ -23,7 +25,9 @@ import de.chaosbutterfly.smcombat.model.session.UserSession;
  *         once in own module 'vaadin-connector'
  */
 @UIScoped
-public class VaadinSessionManager implements UIClientImplementation {
+public class VaadinSessionManager implements UIClientImplementation, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private UserSessionManagement usermanagement;
     private GameSessionManagement gameSessionManagement;
@@ -68,8 +72,6 @@ public class VaadinSessionManager implements UIClientImplementation {
         gameSessionManagement.removeCharacterFromGameSession(sessionToEnd.getGameSession());
         return true; //if session is closed successfully
     }
-
-
 
     @Override
     public CharacterActsCommand pullCharacterActCommand(CombatCharacterSM character) {

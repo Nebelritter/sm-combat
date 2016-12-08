@@ -35,7 +35,6 @@ public class UserEditDialog extends BaseEditDialog {
         super(caption);
     }
 
-
     public KnownUser getKnownUserData() {
         return editUser;
     }
@@ -53,12 +52,12 @@ public class UserEditDialog extends BaseEditDialog {
 
     @Override
     protected ClickListener provideSaveButtonListener() {
-        return  new ClickListener() {
+        return new ClickListener() {
             private static final long serialVersionUID = 1L;
 
             @Override
             public void buttonClick(ClickEvent event) {
-                
+
                 if (editUser == null) {
                     editUser = new KnownUser();
                 }
@@ -105,13 +104,16 @@ public class UserEditDialog extends BaseEditDialog {
         if (editUser == null)
             return false;
         boolean dirty = false;
-        dirty = dirty | stringDirty(editUser.getUserName(), usernameTF.getValue());
-        dirty = dirty | stringDirty(editUser.getPassword(), passwordTF.getValue());
+        dirty = dirty || stringDirty(editUser.getUserName(), usernameTF.getValue());
+        dirty = dirty || stringDirty(editUser.getPassword(), passwordTF.getValue());
         if (isAdminCB != null) {
-            dirty = dirty | booleanDirty(editUser.getIsAdmin(), isAdminCB.getValue());
+            dirty = dirty || booleanDirty(editUser.getIsAdmin(), isAdminCB.getValue());
         }
         return dirty;
     }
 
-
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

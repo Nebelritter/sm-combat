@@ -3,6 +3,8 @@
  */
 package de.chaosbutterfly.smcombat.core.session.service;
 
+import java.io.Serializable;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -14,7 +16,9 @@ import de.chaosbutterfly.smcombat.model.user.KnownUserDAO;
  *
  */
 @Stateless
-public class KnownUserAdminServiceImpl implements KnownUserAdminService {
+public class KnownUserAdminServiceImpl implements KnownUserAdminService, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private KnownUserDAO userDao;
 
@@ -26,7 +30,6 @@ public class KnownUserAdminServiceImpl implements KnownUserAdminService {
         super();
         this.userDao = userDao;
     }
-
 
     @Override
     public KnownUser addUser(String userName, String password, Boolean isAdmin) {

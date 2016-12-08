@@ -3,6 +3,8 @@
  */
 package de.chaosbutterfly.smcombat.model.user;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,7 +16,9 @@ import javax.persistence.NamedQuery;
  */
 @Entity
 @NamedQuery(name = UserQuerys.NAME_QUERY_LOAD_USER_BY_USERNAME, query = UserQuerys.QUERY_LOAD_USER_BY_USERNAME)
-public class KnownUser {
+public class KnownUser implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
@@ -24,7 +28,6 @@ public class KnownUser {
     private String password;
 
     private Boolean isAdmin;
-
 
     /**
      * @return the id
