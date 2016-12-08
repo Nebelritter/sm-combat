@@ -10,10 +10,10 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
@@ -21,30 +21,44 @@ import javax.persistence.TypedQuery;
  *
  */
 @Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class KnownUsersDAOImpl implements KnownUserDAO {
     private static final Logger LOGGER = Logger.getLogger(KnownUsersDAOImpl.class.getName());
 
+    @PersistenceContext(unitName = "sm-combat-model")
     private EntityManager em;
 
-    @Inject
-    private KnownUsersDAOImpl(EntityManager em) {
+    private KnownUsersDAOImpl() {
         super();
-        this.em = em;
     }
 
     @PostConstruct
-    private void addTestUser() {
-        KnownUser newUser = new KnownUser();
-        newUser.setUserName("Test");
-        newUser.setPassword("passw0rd");
-        addUser(newUser);
+    private void addTestUsers() {
+        //gets called multiple time, only add if not present
+        if (loadUser("Test") == null) {
+            String testUserName = "Test";
+            String password = "passw0rd";
+            KnownUser testUser = new KnownUser();
+            testUser.setUserName(testUserName);
+            testUser.setPassword(password);
+            addUser(testUser);
+        }
+        if (loadUser("Admin") == null) {
+            String adminUserName = "Admin";
+            String adminPassword = "passw0rd";
+            KnownUser adminUser = new KnownUser();
+            adminUser.setUserName(adminUserName);
+            adminUser.setPassword(adminPassword);
+            adminUser.setIsAdmin(true);
+            addUser(adminUser);
+        }
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public boolean addUser(KnownUser newUser) {
+    public KnownUser addUser(KnownUser newUser) {
         em.persist(newUser);
-        return true;
+        LOGGER.info("User added: " + newUser);
+        return newUser;//TODO will this return with id set?
     }
 
     @Override
@@ -61,14 +75,15 @@ public class KnownUsersDAOImpl implements KnownUserDAO {
         return false;
     }
 
-    private KnownUser loadUser(String userName) {
+    @Override
+    public KnownUser loadUser(String userName) {
         TypedQuery<KnownUser> query = em.createNamedQuery(UserQuerys.NAME_QUERY_LOAD_USER_BY_USERNAME, KnownUser.class);
         query.setParameter("userName", userName);
         KnownUser result = null;
         try {
             result = query.getSingleResult();
         } catch (NoResultException | NonUniqueResultException e) {
-            LOGGER.log(Level.SEVERE, "Exception in loading user:" + userName);
+            LOGGER.log(Level.SEVERE, "Exception in loading user:" + userName + ":" + e.getLocalizedMessage());
         }
         return result;
     }
@@ -76,6 +91,25 @@ public class KnownUsersDAOImpl implements KnownUserDAO {
     @Override
     public boolean removeUser(KnownUser userToDelete) {
         em.remove(userToDelete);
+        LOGGER.info("User removed: " + userToDelete);
+        return true;
+    }
+
+    @Override
+    public void saveUser(KnownUser user) {
+        em.merge(user);
+        LOGGER.info("User saved: " + user);
+    }
+
+    @Override
+    public KnownUser loadUser(long oldUserId) {
+        return em.find(KnownUser.class, oldUserId);
+    }
+
+    @Override
+    public boolean removeUser(long userId) {
+        KnownUser oldUser = loadUser(userId);
+        em.remove(oldUser);
         return true;
     }
 }

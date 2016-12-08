@@ -4,6 +4,7 @@
 package de.chaosbutterfly.smcombat.model.user;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 
@@ -16,10 +17,14 @@ import javax.persistence.NamedQuery;
 public class KnownUser {
 
     @Id
+    @GeneratedValue
     private long id;
 
     private String userName;
     private String password;
+
+    private Boolean isAdmin;
+
 
     /**
      * @return the id
@@ -66,5 +71,30 @@ public class KnownUser {
         this.password = password;
     }
 
+    /**
+     * @return the isAdmin
+     */
+    public Boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    /**
+     * @param isAdmin
+     *            the isAdmin to set
+     */
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "KnownUser [id=" + id + ", userName=" + userName + ", password=" + password + ", isAdmin=" + isAdmin
+                + "]";
+    }
 
 }

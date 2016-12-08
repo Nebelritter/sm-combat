@@ -3,8 +3,8 @@
  */
 package de.chaosbutterfly.smcombat.client.vaadin.session;
 
-import de.chaosbutterfly.smcombat.core.session.data.SMCombatSession;
-import de.chaosbutterfly.smcombat.core.session.data.UserSession;
+import de.chaosbutterfly.smcombat.model.session.SMCombatSession;
+import de.chaosbutterfly.smcombat.model.session.UserSession;
 
 /**
  * @author Alti

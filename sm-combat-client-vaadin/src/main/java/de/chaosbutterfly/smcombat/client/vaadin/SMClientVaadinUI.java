@@ -10,7 +10,8 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
-import de.chaosbutterfly.smcombat.client.vaadin.view.SimpleLoginView;
+import de.chaosbutterfly.smcombat.client.vaadin.view.LoginView;
+import de.chaosbutterfly.smcombat.client.vaadin.view.ViewConstants;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser
@@ -22,7 +23,7 @@ import de.chaosbutterfly.smcombat.client.vaadin.view.SimpleLoginView;
  * initialize non-component functionality.
  */
 @Theme("mytheme")
-@CDIUI("real")
+@CDIUI("")
 public class SMClientVaadinUI extends UI {
 
     /**  */
@@ -37,7 +38,7 @@ public class SMClientVaadinUI extends UI {
         Navigator navigator = new Navigator(this, this);
 
         navigator.addProvider(viewProvider);
-        navigator.navigateTo(SimpleLoginView.NAME);
+        navigator.navigateTo(LoginView.NAME);
         // We use a view change handler to ensure the user is always redirected
         // to the login view if the user is not logged in.
         getNavigator().addViewChangeListener(new LogInViewChangeListener());
@@ -51,13 +52,13 @@ public class SMClientVaadinUI extends UI {
         public boolean beforeViewChange(ViewChangeEvent event) {
 
             // Check if a user has logged in
-            boolean isLoggedIn = getSession().getAttribute("user") != null;
-            boolean isLoginView = event.getNewView() instanceof SimpleLoginView;
+            boolean isLoggedIn = getSession().getAttribute(ViewConstants.ATTRIBUTE_NAME_SM_VAADIN_SESSION) != null;
+            boolean isLoginView = event.getNewView() instanceof LoginView;
 
             if (!isLoggedIn && !isLoginView) {
                 // Redirect to login view always if a user has not yet
                 // logged in
-                getNavigator().navigateTo(SimpleLoginView.NAME);
+                getNavigator().navigateTo(LoginView.NAME);
                 return false;
 
             } else if (isLoggedIn && isLoginView) {

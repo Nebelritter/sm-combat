@@ -22,14 +22,14 @@ import com.vaadin.ui.themes.Reindeer;
 import de.chaosbutterfly.smcombat.client.vaadin.session.SMVaadinSession;
 import de.chaosbutterfly.smcombat.client.vaadin.session.VaadinSessionManager;
 import de.chaosbutterfly.smcombat.client.vaadin.validators.PasswordValidator;
-import de.chaosbutterfly.smcombat.core.session.data.UserLogInData;
+import de.chaosbutterfly.smcombat.model.user.KnownUser;
 
 /**
  * @author Alti
  *
  */
 @CDIView("LoginView")
-public class SimpleLoginView extends CustomComponent implements View {
+public class LoginView extends CustomComponent implements View {
 
     /**     */
     private static final long serialVersionUID = 1L;
@@ -38,13 +38,14 @@ public class SimpleLoginView extends CustomComponent implements View {
 
     private VaadinSessionManager sessionManager;
 
+
     //UI components
     private TextField user;
     private PasswordField password;
     private Button loginButton;
 
     @Inject
-    public SimpleLoginView(VaadinSessionManager sessionManager) {
+    public LoginView(VaadinSessionManager sessionManager) {
         this.sessionManager = sessionManager;
     }
 
@@ -64,7 +65,7 @@ public class SimpleLoginView extends CustomComponent implements View {
         password.setRequired(true);
         password.setValue("");
         password.setNullRepresentation("");
-//        password.addValidator(new PasswordValidator());//temporary switched off for better testing
+        password.addValidator(new PasswordValidator());
 
         // Create login button
         loginButton = new Button("Login", new LogInClickListener());
@@ -82,6 +83,12 @@ public class SimpleLoginView extends CustomComponent implements View {
         viewLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
         viewLayout.setStyleName(Reindeer.LAYOUT_BLUE);
         setCompositionRoot(viewLayout);
+
+        KnownUser testUser = new KnownUser();
+        testUser.setUserName("Test");
+        testUser.setPassword("passw0rd");
+        //add testUser
+//        userDao.addUser(testUser);
     }
 
     @Override
@@ -102,23 +109,20 @@ public class SimpleLoginView extends CustomComponent implements View {
             if (!user.isValid() || !password.isValid()) {
                 return;
             }
-            String userName = SimpleLoginView.this.user.getValue();
-            String password = SimpleLoginView.this.password.getValue();
-            UserLogInData logInData = new UserLogInData();
-            logInData.setUserName(userName);
-            logInData.setPassword(password);
+            String userName = LoginView.this.user.getValue();
+            String password = LoginView.this.password.getValue();
             // Validate username and password with database here
-            SMVaadinSession session = sessionManager.logIn(logInData);
+            SMVaadinSession session = sessionManager.logIn(userName, password);
             if (session != null) {
                 // Store the current user in the service session
-                getSession().setAttribute("user", userName);
+                getSession().setAttribute(ViewConstants.ATTRIBUTE_NAME_SM_VAADIN_SESSION, session);
                 // Navigate to main view
-                getUI().getNavigator().navigateTo(SimpleLoginMainView.NAME);
+                getUI().getNavigator().navigateTo(MainView.NAME);
             } else {
                 //TODO display message log in was wrong
                 // Wrong password clear the password field and re-focuses it
-                SimpleLoginView.this.password.setValue(null);
-                SimpleLoginView.this.password.focus();
+                LoginView.this.password.setValue(null);
+                LoginView.this.password.focus();
             }
         }
     }

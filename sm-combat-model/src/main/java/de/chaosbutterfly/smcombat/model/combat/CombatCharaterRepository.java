@@ -5,9 +5,11 @@ package de.chaosbutterfly.smcombat.model.combat;
 
 import java.util.List;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -19,24 +21,16 @@ import org.jboss.logging.Logger;
  *
  */
 @ApplicationScoped
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class CombatCharaterRepository {
 
     private final static Logger LOGGER = Logger.getLogger(CombatCharaterRepository.class);
 
+    @PersistenceContext(unitName = "sm-combat-model")
     private EntityManager em;
 
     public CombatCharaterRepository() {
         super();
-    }
-
-    /**
-     * @param log
-     * @param em
-     */
-    @Inject
-    public CombatCharaterRepository(EntityManager em) {
-        super();
-        this.em = em;
     }
 
     public CombatCharacterSM findById(Long id) {

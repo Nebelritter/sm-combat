@@ -16,6 +16,14 @@ public interface KnownUserDAO {
 
     boolean isUserValid(String userName, String password);
 
-    boolean addUser(KnownUser newUser);
+    KnownUser addUser(KnownUser newUser);
+
+    KnownUser loadUser(String userName);
+
+    void saveUser(KnownUser oldUser);
+
+    KnownUser loadUser(long oldUserId);
+
+    boolean removeUser(long userId);
 
 }

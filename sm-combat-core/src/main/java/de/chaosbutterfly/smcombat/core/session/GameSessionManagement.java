@@ -3,85 +3,52 @@
  */
 package de.chaosbutterfly.smcombat.core.session;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 
-import javax.enterprise.context.ApplicationScoped;
-
-import de.chaosbutterfly.smcombat.core.session.data.SMCombatSession;
-import de.chaosbutterfly.smcombat.core.session.data.UserLogInData;
-import de.chaosbutterfly.smcombat.core.session.data.UserSession;
 import de.chaosbutterfly.smcombat.model.character.CharacterSM;
-import de.chaosbutterfly.smcombat.model.combat.CombatCharacterSM;
+import de.chaosbutterfly.smcombat.model.session.SMCombatSession;
+import de.chaosbutterfly.smcombat.model.session.SessionsDAO;
+import de.chaosbutterfly.smcombat.model.session.UserSession;
 
 /**
  * @author Alti
  *
  */
-@ApplicationScoped
+@Stateless
 public class GameSessionManagement {
-    private Set<SMCombatSession> gameSessions;
 
-    public GameSessionManagement() {
+    private SessionsDAO sessionsDAO;
+
+    protected GameSessionManagement() {
         super();
-        gameSessions = new HashSet<>();
     }
 
-    public SMCombatSession openNewPlaySession(UserLogInData gmLogInData) {
-        SMCombatSession gameSession = checkGameSessionActive(gmLogInData);
+    @Inject
+    public GameSessionManagement(SessionsDAO sessionsDAO) {
+        super();
+        this.sessionsDAO = sessionsDAO;
+    }
+
+    public SMCombatSession openNewGameSession(String gmUserName) {
+        SMCombatSession gameSession = sessionsDAO.checkGameSessionActive(gmUserName);
         if (gameSession == null) {
-            gameSession = new SMCombatSession();
-            gameSession.setGmLogInData(gmLogInData);
-            gameSessions.add(gameSession);
+            sessionsDAO.openNewGameSession(gmUserName);
         }
         return gameSession;
     }
 
-    private SMCombatSession checkGameSessionActive(UserLogInData gmLogInData) {
-        for (SMCombatSession gameSession : gameSessions) {
-            if (gmLogInData.equals(gameSession.getGmLogInData())) {
-                return gameSession;
-            }
-        }
-        return null;
+    public SMCombatSession checkGameSessionActive(String gmUserName) {
+        return sessionsDAO.checkGameSessionActive(gmUserName);
     }
 
-    public boolean addCharacterToGameSession(SMCombatSession playSession, UserSession userSession,
+    public boolean addCharacterToGameSession(SMCombatSession gameSession, UserSession userSession,
             CharacterSM character) {
-        SMCombatSession existingSession = null;
-        for (SMCombatSession smCombatSession : gameSessions) {
-            if (smCombatSession.equals(playSession)) {
-                existingSession = smCombatSession;
-            }
-        }
-        if (existingSession == null) {
-            return false;
-        }
-        //check if character already exists in that session
-        List<CombatCharacterSM> charactersInSession = existingSession.getCharactersByUser(userSession);
-        CombatCharacterSM existingCharacter = getExistingCharacter(charactersInSession, character);
-        if (existingCharacter == null) {
-            CombatCharacterSM newCombatCharacter = new CombatCharacterSM(character);
-            return existingSession.addCharacter4User(userSession, newCombatCharacter);
-        } else {
-            return false;
-        }
+        return sessionsDAO.addCharacterToGameSession(gameSession, userSession, character);
     }
 
-    private CombatCharacterSM getExistingCharacter(List<CombatCharacterSM> charactersInSession, CharacterSM character) {
-        if (charactersInSession == null) {
-            return null;
-        }
-        for (CombatCharacterSM combatCharacterSM : charactersInSession) {
-            if (character.equals(combatCharacterSM.getCharacter())) {
-                return combatCharacterSM;
-            }
-        }
-        return null;
-    }
 
     public void removeCharacterFromGameSession(SMCombatSession gameSession) {
-
+        sessionsDAO.removeCharacterFromGameSession(gameSession);
     }
 }

@@ -11,11 +11,10 @@ import de.chaosbutterfly.smcombat.core.combat.commands.CharacterActsCommand;
 import de.chaosbutterfly.smcombat.core.combat.ui.UIClientImplementation;
 import de.chaosbutterfly.smcombat.core.session.GameSessionManagement;
 import de.chaosbutterfly.smcombat.core.session.UserSessionManagement;
-import de.chaosbutterfly.smcombat.core.session.data.SMCombatSession;
-import de.chaosbutterfly.smcombat.core.session.data.UserLogInData;
-import de.chaosbutterfly.smcombat.core.session.data.UserSession;
 import de.chaosbutterfly.smcombat.model.character.CharacterSM;
 import de.chaosbutterfly.smcombat.model.combat.CombatCharacterSM;
+import de.chaosbutterfly.smcombat.model.session.SMCombatSession;
+import de.chaosbutterfly.smcombat.model.session.UserSession;
 
 /**
  * @author Alti
@@ -39,8 +38,8 @@ public class VaadinSessionManager implements UIClientImplementation {
         this.gameSessionManagement = gameSessionManagement;
     }
 
-    public SMVaadinSession logIn(UserLogInData logInData) {
-        UserSession userSession = usermanagement.logInUser(logInData);
+    public SMVaadinSession logIn(String userName, String password) {
+        UserSession userSession = usermanagement.logInUser(userName, password);
         SMVaadinSession result = null;
         if (userSession != null) {
             result = new SMVaadinSession(userSession);
@@ -49,6 +48,9 @@ public class VaadinSessionManager implements UIClientImplementation {
     }
 
     public boolean logOut(SMVaadinSession sessionToEnd) {
+        if (sessionToEnd == null) {
+            return false;
+        }
         return usermanagement.logOut(sessionToEnd.getUserSession());
     }
 

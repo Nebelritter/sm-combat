@@ -47,7 +47,7 @@
             are in easy way to package any libraries needed in the ear, and automatically 
             have any modules (EJB-JARs and WARs) use them -->
           <defaultLibBundleDir>lib</defaultLibBundleDir>
-          <!-- <fileNameMapping>no-version</fileNameMapping>  -->          
+          <fileNameMapping>no-version</fileNameMapping>
         </configuration>
       </plugin>
     </plugins>

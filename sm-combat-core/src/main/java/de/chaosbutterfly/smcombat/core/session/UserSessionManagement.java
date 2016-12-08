@@ -3,78 +3,76 @@
  */
 package de.chaosbutterfly.smcombat.core.session;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import de.chaosbutterfly.smcombat.core.session.data.UserLogInData;
-import de.chaosbutterfly.smcombat.core.session.data.UserSession;
+import de.chaosbutterfly.smcombat.model.session.SessionsDAO;
+import de.chaosbutterfly.smcombat.model.session.UserSession;
+import de.chaosbutterfly.smcombat.model.user.KnownUser;
 import de.chaosbutterfly.smcombat.model.user.KnownUserDAO;
 
 /**
  * @author Alti
  *
  */
-@ApplicationScoped
+@Stateless
 public class UserSessionManagement {
 
-	Logger LOGGER = Logger.getLogger(UserSessionManagement.class.getName());
-
-    private Set<UserSession> loggedUsers;
+    private static Logger LOGGER = Logger.getLogger(UserSessionManagement.class.getName());
 
     private KnownUserDAO userDAO;
+
+    private SessionsDAO sessionsDAO;
 
     protected UserSessionManagement() {
     }
 
     @Inject
-    public UserSessionManagement(KnownUserDAO userDAO) {
+    public UserSessionManagement(KnownUserDAO userDAO, SessionsDAO sessionsDAO) {
         super();
         this.userDAO = userDAO;
-        loggedUsers = new HashSet<>();
+        this.sessionsDAO = sessionsDAO;
     }
 
-    public UserSession logInUser(UserLogInData logInData) {
+    public UserSession logInUser(String userName, String password) {
+        KnownUser knownUser = userDAO.loadUser(userName);
         //check loginData
-        boolean valid = userDAO.isUserValid(logInData.getUserName(), logInData.getPassword());
+        boolean valid = isUserValid(userName, password, knownUser);
         if (!valid) {
             return null;
         }
-        //check already logged in 
-        UserSession session = isAlreadyLoggedIn(logInData);
+        //check already logged in
+        UserSession session = sessionsDAO.isAlreadyLoggedIn(userName);
         if (session == null) {
-            session = new UserSession();
-            session.setLogInData(logInData);
-            loggedUsers.add(session);
-			LOGGER.log(Level.INFO, "User logged in:" + logInData.getUserName());
+            session = sessionsDAO.createNewUserSession(knownUser);
+            LOGGER.log(Level.INFO, "User logged in:" + userName);
             //TODO broadcast to other sessions that user logged in?
-
         } else {
-            LOGGER.log(Level.INFO, "User(" + logInData.getUserName() + ") already logged in. Session:" + session);
+            LOGGER.log(Level.INFO, "User(" + userName + ") already logged in. Session:" + session);
         }
         return session;
     }
 
-    public UserSession isAlreadyLoggedIn(UserLogInData logInData) {
-        for (UserSession userSession : loggedUsers) {
-            if (logInData.equals(userSession.getLogInData())) {
-                return userSession;
+    private boolean isUserValid(String userName, String password, KnownUser knownUser) {
+        if (knownUser != null) {
+            if (password.equals(knownUser.getPassword())) {
+                return true;
+            } else {
+                LOGGER.warning("Wrong password provided:" + password);
             }
         }
-        return null;
+        LOGGER.info("User not found:" + userName);
+        return false;
     }
 
-    public boolean logOut(UserSession session) {
-        //check loginData
-		boolean success = loggedUsers.remove(session);
-		if (success) {
-			String userName = session.getLogInData().getUserName();
-			LOGGER.log(Level.INFO, "User logged out:" + userName);
-		}
-		return success;
+    public UserSession isUserAlreadyLoggedIn(String userName) {
+        return sessionsDAO.isAlreadyLoggedIn(userName);
+    }
+
+    public boolean logOut(UserSession userSession) {
+        return sessionsDAO.logOut(userSession);
     }
 }
