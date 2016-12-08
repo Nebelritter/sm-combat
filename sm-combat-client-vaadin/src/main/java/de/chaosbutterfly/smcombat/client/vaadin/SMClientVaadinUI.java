@@ -54,6 +54,11 @@ public class SMClientVaadinUI extends UI {
         return super.equals(obj);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     private class LogInViewChangeListener implements ViewChangeListener {
         /***/
         private static final long serialVersionUID = 1L;

@@ -263,6 +263,16 @@ public class MainView extends CustomComponent implements View {
         return editUsersCommand;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     private interface IGetKnownUserProvider extends Serializable {
         KnownUser provideKnownUser();
     }

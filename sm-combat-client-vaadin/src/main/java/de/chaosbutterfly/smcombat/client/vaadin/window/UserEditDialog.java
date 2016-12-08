@@ -104,10 +104,10 @@ public class UserEditDialog extends BaseEditDialog {
         if (editUser == null)
             return false;
         boolean dirty = false;
-        dirty = dirty || stringDirty(editUser.getUserName(), usernameTF.getValue());
-        dirty = dirty || stringDirty(editUser.getPassword(), passwordTF.getValue());
+        dirty = stringDirty(editUser.getUserName(), usernameTF.getValue()) || dirty;
+        dirty = stringDirty(editUser.getPassword(), passwordTF.getValue()) || dirty;
         if (isAdminCB != null) {
-            dirty = dirty || booleanDirty(editUser.getIsAdmin(), isAdminCB.getValue());
+            dirty = booleanDirty(editUser.getIsAdmin(), isAdminCB.getValue()) || dirty;
         }
         return dirty;
     }
@@ -115,5 +115,10 @@ public class UserEditDialog extends BaseEditDialog {
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

@@ -96,6 +96,16 @@ public class LoginView extends CustomComponent implements View {
         user.focus();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     private class LogInClickListener implements Button.ClickListener {
         /**      */
         private static final long serialVersionUID = 1L;
@@ -124,11 +134,6 @@ public class LoginView extends CustomComponent implements View {
                 LoginView.this.password.focus();
             }
         }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
     }
 
 }

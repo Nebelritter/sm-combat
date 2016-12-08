@@ -111,6 +111,11 @@ public abstract class BaseEditDialog extends Window {
         return super.equals(obj);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     private class CancelButtonClicklistener implements ClickListener {
 
         private static final long serialVersionUID = 1L;

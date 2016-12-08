@@ -3,6 +3,8 @@
  */
 package de.chaosbutterfly.smcombat.core.session;
 
+import java.io.Serializable;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -16,7 +18,8 @@ import de.chaosbutterfly.smcombat.model.session.UserSession;
  *
  */
 @Stateless
-public class GameSessionManagement {
+public class GameSessionManagement implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private SessionsDAO sessionsDAO;
 
@@ -46,7 +49,6 @@ public class GameSessionManagement {
             CharacterSM character) {
         return sessionsDAO.addCharacterToGameSession(gameSession, userSession, character);
     }
-
 
     public void removeCharacterFromGameSession(SMCombatSession gameSession) {
         sessionsDAO.removeCharacterFromGameSession(gameSession);

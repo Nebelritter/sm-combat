@@ -3,6 +3,7 @@
  */
 package de.chaosbutterfly.smcombat.core.session;
 
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +20,8 @@ import de.chaosbutterfly.smcombat.model.user.KnownUserDAO;
  *
  */
 @Stateless
-public class UserSessionManagement {
+public class UserSessionManagement implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private static Logger LOGGER = Logger.getLogger(UserSessionManagement.class.getName());
 

@@ -18,7 +18,6 @@ public class UserListEditDialog extends BaseEditDialog {
         super(caption);
     }
 
-
     @Override
     protected Component provideEditComponent() {
         //use grid
@@ -26,17 +25,24 @@ public class UserListEditDialog extends BaseEditDialog {
         return null;
     }
 
-
     @Override
     protected ClickListener provideSaveButtonListener() {
         //no further action
         return null;
     }
 
-
     @Override
     protected boolean isDirty() {
         return false;//always false, never dirty, because eidt is doner right away
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

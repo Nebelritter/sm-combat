@@ -3,6 +3,8 @@
  */
 package de.chaosbutterfly.smcombat.model.user;
 
+import java.io.Serializable;
+
 import javax.ejb.Local;
 
 /**
@@ -10,7 +12,7 @@ import javax.ejb.Local;
  *
  */
 @Local
-public interface KnownUserDAO {
+public interface KnownUserDAO extends Serializable {
 
     boolean removeUser(KnownUser userToDelete);
 
