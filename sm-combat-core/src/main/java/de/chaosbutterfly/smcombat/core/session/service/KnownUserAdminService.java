@@ -3,6 +3,8 @@
  */
 package de.chaosbutterfly.smcombat.core.session.service;
 
+import java.util.List;
+
 import javax.ejb.Local;
 
 import de.chaosbutterfly.smcombat.model.user.KnownUser;
@@ -21,5 +23,7 @@ public interface KnownUserAdminService {
     boolean removeUser(long userId);
 
     KnownUser getUser(String userName);
+
+    List<KnownUser> getAllKnownUsers();
 
 }

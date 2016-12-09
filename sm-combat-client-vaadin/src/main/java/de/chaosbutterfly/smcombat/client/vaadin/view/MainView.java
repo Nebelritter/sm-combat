@@ -3,9 +3,9 @@
  */
 package de.chaosbutterfly.smcombat.client.vaadin.view;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -30,6 +30,7 @@ import com.vaadin.ui.Window.CloseListener;
 import de.chaosbutterfly.smcombat.client.vaadin.session.SMVaadinSession;
 import de.chaosbutterfly.smcombat.client.vaadin.session.VaadinSessionManager;
 import de.chaosbutterfly.smcombat.client.vaadin.window.UserEditDialog;
+import de.chaosbutterfly.smcombat.client.vaadin.window.UserListEditDialog;
 import de.chaosbutterfly.smcombat.core.session.service.KnownUserAdminService;
 import de.chaosbutterfly.smcombat.model.session.UserSession;
 import de.chaosbutterfly.smcombat.model.user.KnownUser;
@@ -40,260 +41,238 @@ import de.chaosbutterfly.smcombat.model.user.KnownUser;
  */
 @CDIView("Main")
 public class MainView extends CustomComponent implements View {
-    private static final Logger LOGGER = Logger.getLogger(MainView.class.getName());
-    /**    */
-    private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = Logger.getLogger(MainView.class.getName());
 
-    public static final String NAME = "Main";
+	private static final long serialVersionUID = 1L;
 
-    private static final String UI_TXT_MENU_ADMIN = "Admin";
-    private static final String UI_TXT_MENU_ADMIN_ADD_USER = "Add User";
-    private static final String UI_TXT_MENU_ADMIN_EDIT_USERS = "Edit Users";
+	public static final String NAME = "Main";
 
-    private static final String UI_TXT_MENU_USER = "User";
-    private static final String UI_TXT_MENU_USER_PROFILE = "Profile";
-    private static final String UI_TXT_MENU_USER_LOGOUT = "Logout";
+	private static final String UI_TXT_MENU_ADMIN = "Admin";
+	private static final String UI_TXT_MENU_ADMIN_ADD_USER = "Add User";
+	private static final String UI_TXT_MENU_ADMIN_EDIT_USERS = "Edit Users";
 
-    private VaadinSessionManager sessionManager;
-    private KnownUserAdminService userAdminService;
+	private static final String UI_TXT_MENU_USER = "User";
+	private static final String UI_TXT_MENU_USER_PROFILE = "Profile";
+	private static final String UI_TXT_MENU_USER_LOGOUT = "Logout";
 
-    //========= UI Components =============
-    private MenuBar menuBar;
+	private transient VaadinSessionManager sessionManager;
 
-    private Label userNameLB = new Label();
+	private transient KnownUserAdminService userAdminService;
 
-    //============ Data ===================
+	//========= UI Components =============
+	private MenuBar menuBar;
 
-    private KnownUser selectedUser;
+	private Label userNameLB = new Label();
 
-    @Inject
-    public MainView(VaadinSessionManager sessionManager, KnownUserAdminService userAdminService) {
-        this.sessionManager = sessionManager;
-        this.userAdminService = userAdminService;
-    }
+	@Inject
+	public MainView(VaadinSessionManager sessionManager, KnownUserAdminService userAdminService) {
+		this.sessionManager = sessionManager;
+		this.userAdminService = userAdminService;
+	}
 
-    @PostConstruct
-    public void buildView() {
-        GridLayout mainGrid = new GridLayout(1, 1);
-        //build menu bar
-        menuBar = new MenuBar();
-        createUserMenu();
-        createAdminMenu();
-        mainGrid.addComponent(menuBar);
+	@PostConstruct
+	public void buildView() {
+		GridLayout mainGrid = new GridLayout(1, 1);
+		//build menu bar
+		menuBar = new MenuBar();
+		createUserMenu();
+		createAdminMenu();
+		mainGrid.addComponent(menuBar);
 
-        mainGrid.addComponent(userNameLB);
-        //build table with characters
+		mainGrid.addComponent(userNameLB);
+		//build table with characters
 
-        //build list with active sessions
-        setCompositionRoot(mainGrid);
+		//build list with active sessions
+		setCompositionRoot(mainGrid);
 
-    }
+	}
 
-    private void createAdminMenu() {
-        MenuItem menuUser = menuBar.addItem(UI_TXT_MENU_ADMIN, null, null);
-        menuUser.addItem(UI_TXT_MENU_ADMIN_ADD_USER, provideAddUserCommand());
-        menuUser.addItem(UI_TXT_MENU_ADMIN_EDIT_USERS, provideEditUsersCommand());
-    }
+	private void createAdminMenu() {
+		MenuItem menuUser = menuBar.addItem(UI_TXT_MENU_ADMIN, null, null);
+		menuUser.addItem(UI_TXT_MENU_ADMIN_ADD_USER, provideAddUserCommand());
+		menuUser.addItem(UI_TXT_MENU_ADMIN_EDIT_USERS, provideEditUsersCommand());
+	}
 
-    private void createUserMenu() {
-        MenuItem menuUser = menuBar.addItem(UI_TXT_MENU_USER, null, null);
-        menuUser.addItem(UI_TXT_MENU_USER_PROFILE, provideUserEditCommand(new SessionKnownUserProvider()));
-        menuUser.addSeparator();
-        menuUser.addItem(UI_TXT_MENU_USER_LOGOUT, provideLogOutCommand());
-    }
+	private void createUserMenu() {
+		Supplier<KnownUser> currentUserSupplier = () -> {
+			SMVaadinSession smVaadinSession = getSmVaadinSession();
+			String userName = smVaadinSession.getUserSession().getUserName();
+			return userAdminService.getUser(userName);
+		};
 
-    @Override
-    public void enter(ViewChangeEvent event) {
-        SMVaadinSession session = getSmVaadinSession();
-        UserSession userSession = session.getUserSession();
-        if (Boolean.TRUE.equals(userSession.getIsAdmin())) {
-            setAdminMenuVisible(true);
-        } else {
-            setAdminMenuVisible(false);
-        }
-        // Get the user name from the session       
-        String username = userSession.getUserName();
-        // And show the username
-        userNameLB.setValue("Hello " + username);
-    }
+		MenuItem menuUser = menuBar.addItem(UI_TXT_MENU_USER, null, null);
+		menuUser.addItem(UI_TXT_MENU_USER_PROFILE, provideUserEditCommand(currentUserSupplier));
+		menuUser.addSeparator();
+		menuUser.addItem(UI_TXT_MENU_USER_LOGOUT, provideLogOutCommand());
+	}
 
-    private void setAdminMenuVisible(boolean visible) {
-        List<MenuItem> mainItems = menuBar.getItems();
-        for (MenuItem menuItem : mainItems) {
-            if (UI_TXT_MENU_ADMIN.equals(menuItem.getText())) {
-                menuItem.setVisible(visible);
-            }
-        }
-    }
+	@Override
+	public void enter(ViewChangeEvent event) {
+		SMVaadinSession session = getSmVaadinSession();
+		UserSession userSession = session.getUserSession();
+		if (Boolean.TRUE.equals(userSession.getIsAdmin())) {
+			setAdminMenuVisible(true);
+		} else {
+			setAdminMenuVisible(false);
+		}
+		// Get the user name from the session       
+		String username = userSession.getUserName();
+		// And show the username
+		userNameLB.setValue("Hello " + username);
+	}
 
-    private SMVaadinSession getSmVaadinSession() {
-        Object attribute = getSession().getAttribute(ViewConstants.ATTRIBUTE_NAME_SM_VAADIN_SESSION);
-        return (SMVaadinSession) attribute;
-    }
+	private void setAdminMenuVisible(boolean visible) {
+		List<MenuItem> mainItems = menuBar.getItems();
+		for (MenuItem menuItem : mainItems) {
+			if (UI_TXT_MENU_ADMIN.equals(menuItem.getText())) {
+				menuItem.setVisible(visible);
+			}
+		}
+	}
 
-    private Command provideLogOutCommand() {
-        Command logoutCommand = new Command() {
-            /**       */
-            private static final long serialVersionUID = 1L;
+	private SMVaadinSession getSmVaadinSession() {
+		Object attribute = getSession().getAttribute(ViewConstants.ATTRIBUTE_NAME_SM_VAADIN_SESSION);
+		return (SMVaadinSession) attribute;
+	}
 
-            @Override
-            public void menuSelected(MenuItem selectedItem) {
-                // "Logout" the user               
-                SMVaadinSession sessionToEnd = getSmVaadinSession();
-                if (sessionManager.logOut(sessionToEnd)) {
-                    getSession().setAttribute(ViewConstants.ATTRIBUTE_NAME_SM_VAADIN_SESSION, null);
-                }
-                //remove/close all open windows
-                UI ui = getUI();
-                Collection<Window> windows = ui.getWindows();
-                for (Window window : windows) {
-                    ui.removeWindow(window);
-                }
-                // Refresh this view, should redirect to login view
-                getUI().getNavigator().navigateTo(LoginView.NAME);
-                Notification.show("Logout completed", Type.TRAY_NOTIFICATION);
-            }
-        };
-        return logoutCommand;
-    }
+	private Command provideLogOutCommand() {
+		Command logoutCommand = new Command() {
+			/**       */
+			private static final long serialVersionUID = 1L;
 
-    private Command provideUserEditCommand(IGetKnownUserProvider provider) {
-        //open user edit dialog at first
-        Command editUserCommand = new Command() {
-            private static final long serialVersionUID = 1L;
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+				// "Logout" the user               
+				SMVaadinSession sessionToEnd = getSmVaadinSession();
+				if (sessionManager.logOut(sessionToEnd)) {
+					getSession().setAttribute(ViewConstants.ATTRIBUTE_NAME_SM_VAADIN_SESSION, null);
+				}
+				//remove/close all open windows
+				UI ui = getUI();
+				Collection<Window> windows = ui.getWindows();
+				for (Window window : windows) {
+					ui.removeWindow(window);
+				}
+				// Refresh this view, should redirect to login view
+				getUI().getNavigator().navigateTo(LoginView.NAME);
+				Notification.show("Logout completed", Type.TRAY_NOTIFICATION);
+			}
+		};
+		return logoutCommand;
+	}
 
-            IGetKnownUserProvider knownUserProvider = provider;
+	private Command provideUserEditCommand(Supplier<KnownUser> provider) {
+		//open user edit dialog at first
+		Command editUserCommand = new Command() {
+			private static final long serialVersionUID = 1L;
 
-            @Override
-            public void menuSelected(MenuItem selectedItem) {
-                KnownUser user = knownUserProvider.provideKnownUser();
-                //open user edit dialog
-                //create dialog
-                UserEditDialog myUserEditWindow = new UserEditDialog("Edit user: " + user);
-                myUserEditWindow.setKnownUserData(cloneUser(user));
-                //close listener
-                myUserEditWindow.addCloseListener(new CloseListener() {
-                    private static final long serialVersionUID = 1L;
+			Supplier<KnownUser> knownUserProvider = provider;
 
-                    @Override
-                    public void windowClose(CloseEvent e) {
-                        UserEditDialog editWindow = (UserEditDialog) e.getWindow();
-                        int result = editWindow.getResult();
-                        switch (result) {
-                        case UserEditDialog.RESULT_SAVE:
-                            //get new data and save 
-                            KnownUser editedUser = editWindow.getKnownUserData();
-                            LOGGER.finest("User edited: old(" + user + "),new:" + editedUser);
-                            userAdminService.editUser(user.getId(), editedUser);
-                            Notification.show("User changed", Type.TRAY_NOTIFICATION);
-                            break;
-                        default:
-                            Notification.show("User edit cancelled", Type.TRAY_NOTIFICATION);
-                            LOGGER.finest("UserEdit cancelled");
-                            break;
-                        }
-                    }
-                });
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+				KnownUser user = knownUserProvider.get();
+				//open user edit dialog
+				//create dialog
+				UserEditDialog myUserEditWindow = new UserEditDialog("Edit user: " + user);
+				myUserEditWindow.setKnownUserData(cloneUser(user));
+				//close listener
+				myUserEditWindow.addCloseListener(new CloseListener() {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void windowClose(CloseEvent e) {
+						UserEditDialog editWindow = (UserEditDialog) e.getWindow();
+						int result = editWindow.getResult();
+						switch (result) {
+						case UserEditDialog.RESULT_SAVE:
+							//get new data and save 
+							KnownUser editedUser = editWindow.getKnownUserData();
+							LOGGER.finest("User edited: old(" + user + "),new:" + editedUser);
+							userAdminService.editUser(user.getId(), editedUser);
+							Notification.show("User changed", Type.TRAY_NOTIFICATION);
+							break;
+						default:
+							Notification.show("User edit cancelled", Type.TRAY_NOTIFICATION);
+							LOGGER.finest("UserEdit cancelled");
+							break;
+						}
+					}
+				});
+				//open
+				UI.getCurrent().addWindow(myUserEditWindow);
+			}
+		};
+		return editUserCommand;
+	}
+
+	private KnownUser cloneUser(KnownUser selectedUser) {
+		// TODO Auto-generated method stub
+		return selectedUser;
+	}
+
+	private Command provideAddUserCommand() {
+		Command addUserCommand = new Command() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+				//open user edit dialog
+				//create dialog
+				UserEditDialog addUserWindow = new UserEditDialog("Add user");
+				addUserWindow.setKnownUserData(new KnownUser());
+				//close listener
+				addUserWindow.addCloseListener(new CloseListener() {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void windowClose(CloseEvent e) {
+						UserEditDialog editWindow = (UserEditDialog) e.getWindow();
+						int result = editWindow.getResult();
+						switch (result) {
+						case UserEditDialog.RESULT_SAVE:
+							//get new data and save 
+							KnownUser editedUser = editWindow.getKnownUserData();
+							LOGGER.finest("User added:" + editedUser);
+							userAdminService.addUser(editedUser.getUserName(), editedUser.getPassword(),
+									editedUser.getIsAdmin());
+							Notification.show("User added", Type.TRAY_NOTIFICATION);
+							break;
+						default:
+							LOGGER.finest("User adding cancelled");
+							Notification.show("User adding cancelled", Type.TRAY_NOTIFICATION);
+							break;
+						}
+					}
+				});
+				//open
+				UI.getCurrent().addWindow(addUserWindow);
+			}
+		};
+		return addUserCommand;
+	}
+
+	private Command provideEditUsersCommand() {
+		Command editUsersCommand = new Command() {
+			/**       */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+                UserListEditDialog listDialog = new UserListEditDialog("User list", userAdminService);
                 //open
-                UI.getCurrent().addWindow(myUserEditWindow);
-            }
-        };
-        return editUserCommand;
-    }
+                UI.getCurrent().addWindow(listDialog);
+			}
+		};
+		return editUsersCommand;
+	}
 
-    private KnownUser cloneUser(KnownUser selectedUser) {
-        // TODO Auto-generated method stub
-        return selectedUser;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
 
-    private Command provideAddUserCommand() {
-        Command addUserCommand = new Command() {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void menuSelected(MenuItem selectedItem) {
-                //open user edit dialog
-                //create dialog
-                UserEditDialog addUserWindow = new UserEditDialog("Add user");
-                addUserWindow.setKnownUserData(new KnownUser());
-                //close listener
-                addUserWindow.addCloseListener(new CloseListener() {
-                    private static final long serialVersionUID = 1L;
-
-                    @Override
-                    public void windowClose(CloseEvent e) {
-                        UserEditDialog editWindow = (UserEditDialog) e.getWindow();
-                        int result = editWindow.getResult();
-                        switch (result) {
-                        case UserEditDialog.RESULT_SAVE:
-                            //get new data and save 
-                            KnownUser editedUser = editWindow.getKnownUserData();
-                            LOGGER.finest("User added:" + editedUser);
-                            userAdminService.addUser(editedUser.getUserName(), editedUser.getPassword(),
-                                    editedUser.getIsAdmin());
-                            Notification.show("User added", Type.TRAY_NOTIFICATION);
-                            break;
-                        default:
-                            LOGGER.finest("User adding cancelled");
-                            Notification.show("User adding cancelled", Type.TRAY_NOTIFICATION);
-                            break;
-                        }
-                    }
-                });
-                //open
-                UI.getCurrent().addWindow(addUserWindow);
-            }
-        };
-        return addUserCommand;
-    }
-
-    private Command provideEditUsersCommand() {
-        Command editUsersCommand = new Command() {
-            /**       */
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void menuSelected(MenuItem selectedItem) {
-                //open user find dialog
-                //table with delete/edit possibility
-                //open user edit dialog
-                provideUserEditCommand(new SelectedKnownUserProvider());
-            }
-        };
-        return editUsersCommand;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    private interface IGetKnownUserProvider extends Serializable {
-        KnownUser provideKnownUser();
-    }
-
-    private class SessionKnownUserProvider implements IGetKnownUserProvider {
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public KnownUser provideKnownUser() {
-            SMVaadinSession smVaadinSession = getSmVaadinSession();
-            String userName = smVaadinSession.getUserSession().getUserName();
-            return userAdminService.getUser(userName);
-        }
-    }
-
-    private class SelectedKnownUserProvider implements IGetKnownUserProvider {
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public KnownUser provideKnownUser() {
-            return selectedUser;
-        }
-    }
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 }

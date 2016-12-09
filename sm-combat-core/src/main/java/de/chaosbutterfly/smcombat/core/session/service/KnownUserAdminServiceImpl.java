@@ -4,6 +4,8 @@
 package de.chaosbutterfly.smcombat.core.session.service;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -57,5 +59,10 @@ public class KnownUserAdminServiceImpl implements KnownUserAdminService, Seriali
     @Override
     public KnownUser getUser(String userName) {
         return userDao.loadUser(userName);
+    }
+
+    @Override
+    public List<KnownUser> getAllKnownUsers() {
+        return new ArrayList<>(userDao.getAllUsers());
     }
 }

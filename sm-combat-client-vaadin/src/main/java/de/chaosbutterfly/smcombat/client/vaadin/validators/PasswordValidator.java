@@ -12,7 +12,6 @@ import com.vaadin.data.validator.AbstractValidator;
 // Validator for validating the passwords
 public final class PasswordValidator extends AbstractValidator<String> {
 
-    /**  */
     private static final long serialVersionUID = 1L;
 
     public PasswordValidator() {

@@ -3,6 +3,8 @@
  */
 package de.chaosbutterfly.smcombat.client.vaadin.session;
 
+import java.io.Serializable;
+
 import de.chaosbutterfly.smcombat.model.session.SMCombatSession;
 import de.chaosbutterfly.smcombat.model.session.UserSession;
 
@@ -12,9 +14,11 @@ import de.chaosbutterfly.smcombat.model.session.UserSession;
  *         User session with added vaadin information
  *
  */
-public class SMVaadinSession {
+public class SMVaadinSession implements Serializable {
 
-    private UserSession userSession;
+	private static final long serialVersionUID = 1L;
+
+	private UserSession userSession;
 
     private SMCombatSession gameSession;
 

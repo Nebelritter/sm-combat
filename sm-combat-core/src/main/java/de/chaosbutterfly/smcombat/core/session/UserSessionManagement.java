@@ -23,7 +23,7 @@ import de.chaosbutterfly.smcombat.model.user.KnownUserDAO;
 public class UserSessionManagement implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static Logger LOGGER = Logger.getLogger(UserSessionManagement.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(UserSessionManagement.class.getName());
 
     private KnownUserDAO userDAO;
 

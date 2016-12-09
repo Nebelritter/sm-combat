@@ -8,6 +8,7 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 /**
@@ -15,7 +16,10 @@ import javax.persistence.NamedQuery;
  *
  */
 @Entity
-@NamedQuery(name = UserQuerys.NAME_QUERY_LOAD_USER_BY_USERNAME, query = UserQuerys.QUERY_LOAD_USER_BY_USERNAME)
+@NamedQueries({
+        @NamedQuery(name = UserQuerys.NAME_QUERY_LOAD_USER_BY_USERNAME, query = UserQuerys.QUERY_LOAD_USER_BY_USERNAME),
+    @NamedQuery(name = UserQuerys.NAME_QUERY_LOAD_ALL_USERS, query = UserQuerys.QUERY_LOAD_ALL_USERS)
+})
 public class KnownUser implements Serializable {
 
     private static final long serialVersionUID = 1L;

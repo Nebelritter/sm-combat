@@ -4,6 +4,7 @@
 package de.chaosbutterfly.smcombat.model.user;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.ejb.Local;
 
@@ -27,5 +28,7 @@ public interface KnownUserDAO extends Serializable {
     KnownUser loadUser(long oldUserId);
 
     boolean removeUser(long userId);
+
+    List<KnownUser> getAllUsers();
 
 }

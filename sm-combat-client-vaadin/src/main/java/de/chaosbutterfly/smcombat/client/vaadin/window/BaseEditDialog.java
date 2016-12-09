@@ -31,7 +31,12 @@ public abstract class BaseEditDialog extends Window {
     protected Button cancelButton;
     protected Button saveButton;
 
+	protected String caption;
+
     public BaseEditDialog(String caption) {
+		this.caption = caption;
+		setCaption(caption);
+
         VerticalLayout content = new VerticalLayout();
         setContent(content);
 
@@ -46,18 +51,20 @@ public abstract class BaseEditDialog extends Window {
         cancelButton = new Button("Cancel");
         cancelButton.addClickListener(new CancelButtonClicklistener());
         saveButton = new Button("Save");
+
+        ClickListener saveButtonListener = provideSaveButtonListener();
+        if (saveButtonListener != null) {
+            saveButton.addClickListener(saveButtonListener);
+        }
         saveButton.addClickListener(new ClickListener() {
             private static final long serialVersionUID = 1L;
 
             @Override
             public void buttonClick(ClickEvent event) {
                 result = RESULT_SAVE;
+                close();
             }
         });
-        ClickListener saveButtonListener = provideSaveButtonListener();
-        if (saveButtonListener != null) {
-            saveButton.addClickListener(saveButtonListener);
-        }
 
         buttonsHLO.addComponent(cancelButton);
         buttonsHLO.addComponent(saveButton);
@@ -91,6 +98,41 @@ public abstract class BaseEditDialog extends Window {
             return !(original == null && changed == null);
     }
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((caption == null) ? 0 : caption.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (!(obj instanceof BaseEditDialog))
+			return false;
+		BaseEditDialog other = (BaseEditDialog) obj;
+		if (caption == null) {
+			if (other.caption != null)
+				return false;
+		} else if (!caption.equals(other.caption))
+			return false;
+		return true;
+	}
+
     /**
      * @return the result
      */
@@ -106,15 +148,7 @@ public abstract class BaseEditDialog extends Window {
         this.result = result;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
 
     private class CancelButtonClicklistener implements ClickListener {
 
@@ -138,8 +172,13 @@ public abstract class BaseEditDialog extends Window {
                         }
                     }
                 });
+            } else {
+                //not dirty, simply close
+                result = RESULT_CANCEL;
+                close();
             }
         }
     }
+
 
 }

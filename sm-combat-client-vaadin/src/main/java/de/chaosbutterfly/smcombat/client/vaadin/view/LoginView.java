@@ -36,7 +36,7 @@ public class LoginView extends CustomComponent implements View {
 
     public static final String NAME = "LoginView";
 
-    private VaadinSessionManager sessionManager;
+	private transient VaadinSessionManager sessionManager;
 
     //UI components
     private TextField user;

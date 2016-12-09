@@ -110,15 +110,5 @@ public class UserEditDialog extends BaseEditDialog {
             dirty = booleanDirty(editUser.getIsAdmin(), isAdminCB.getValue()) || dirty;
         }
         return dirty;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
+	}
 }

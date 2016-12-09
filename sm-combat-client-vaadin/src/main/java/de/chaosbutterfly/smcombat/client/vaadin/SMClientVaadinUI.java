@@ -29,7 +29,7 @@ public class SMClientVaadinUI extends UI {
     /**  */
     private static final long serialVersionUID = 1L;
 
-    private CDIViewProvider viewProvider;
+	private transient CDIViewProvider viewProvider;
 
     @Inject
     public SMClientVaadinUI(CDIViewProvider viewProvider) {

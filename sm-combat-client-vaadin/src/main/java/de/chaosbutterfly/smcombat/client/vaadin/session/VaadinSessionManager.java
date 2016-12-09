@@ -29,8 +29,8 @@ public class VaadinSessionManager implements UIClientImplementation, Serializabl
 
     private static final long serialVersionUID = 1L;
 
-    private UserSessionManagement usermanagement;
-    private GameSessionManagement gameSessionManagement;
+	private transient UserSessionManagement usermanagement;
+	private transient GameSessionManagement gameSessionManagement;
 
     public VaadinSessionManager() {
     }
