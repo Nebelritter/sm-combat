@@ -3,3 +3,5 @@
 .classpath
 /sm-combat-client-vaadin/target
 /sm-combat-config/bin
+bin
+target
